@@ -1,0 +1,40 @@
+{
+  "2025-09-29": {
+    "total_requests": 6,
+    "total_tokens": 3657,
+    "total_cost": 0.0,
+    "services": {
+      "ServiceType.OPENROUTER": {
+        "requests": 6,
+        "tokens": 3657,
+        "cost": 0.0
+      }
+    },
+    "models": {
+      "x-ai/grok-4-fast:free": {
+        "requests": 6,
+        "tokens": 3657,
+        "cost": 0.0
+      }
+    }
+  },
+  "2025-10-02": {
+    "total_requests": 1,
+    "total_tokens": 643,
+    "total_cost": 0.0,
+    "services": {
+      "ServiceType.OPENROUTER": {
+        "requests": 1,
+        "tokens": 643,
+        "cost": 0.0
+      }
+    },
+    "models": {
+      "x-ai/grok-4-fast:free": {
+        "requests": 1,
+        "tokens": 643,
+        "cost": 0.0
+      }
+    }
+  }
+}

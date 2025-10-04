@@ -1,0 +1,18 @@
+# Minimal requirements for initial setup
+# Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.0.0
+
+# Basic dependencies
+python-dotenv>=1.0.0
+httpx>=0.25.0
+
+# AI Services (basic ones)
+openai>=1.0.0
+google-generativeai>=0.3.0
+
+# Utilities
+structlog>=23.2.0
+python-multipart>=0.0.6

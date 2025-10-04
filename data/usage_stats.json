@@ -1,0 +1,74 @@
+{
+  "records": [
+    {
+      "timestamp": "2025-09-29T16:57:34.307336",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 9,
+      "output_tokens": 444,
+      "total_tokens": 453,
+      "estimated_cost_usd": 0.0,
+      "request_id": "chat_4645520464"
+    },
+    {
+      "timestamp": "2025-09-29T16:59:27.869724",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 11,
+      "output_tokens": 1318,
+      "total_tokens": 1329,
+      "estimated_cost_usd": 0.0,
+      "request_id": "stream_4646230272"
+    },
+    {
+      "timestamp": "2025-09-29T17:18:55.348099",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 9,
+      "output_tokens": 58,
+      "total_tokens": 67,
+      "estimated_cost_usd": 0.0,
+      "request_id": "chat_df473d26-f8e6-4df4-b351-5760e23c8112"
+    },
+    {
+      "timestamp": "2025-09-29T17:25:59.876419",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 13,
+      "output_tokens": 618,
+      "total_tokens": 631,
+      "estimated_cost_usd": 0.0,
+      "request_id": "stream_ef6f2265-844d-4c3a-a53f-6e1f6138b1e7"
+    },
+    {
+      "timestamp": "2025-09-29T17:43:12.600217",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 5,
+      "output_tokens": 84,
+      "total_tokens": 89,
+      "estimated_cost_usd": 0.0,
+      "request_id": "chat_93663a9e-c78f-4ede-9f92-a53d162d069e"
+    },
+    {
+      "timestamp": "2025-09-29T17:46:30.621522",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 11,
+      "output_tokens": 1077,
+      "total_tokens": 1088,
+      "estimated_cost_usd": 0.0,
+      "request_id": "stream_6561d074-9959-48b2-b12a-6a066c2d0c0a"
+    },
+    {
+      "timestamp": "2025-10-02T22:25:09.170689",
+      "service": "openrouter",
+      "model": "x-ai/grok-4-fast:free",
+      "input_tokens": 17,
+      "output_tokens": 626,
+      "total_tokens": 643,
+      "estimated_cost_usd": 0.0,
+      "request_id": "stream_0d836913-dfcb-4f72-80cc-5623431a5d47"
+    }
+  ]
+}

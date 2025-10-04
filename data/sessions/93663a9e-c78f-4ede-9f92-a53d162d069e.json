@@ -1,0 +1,41 @@
+{
+  "session": {
+    "id": "93663a9e-c78f-4ede-9f92-a53d162d069e",
+    "title": "测试持久化",
+    "created_at": "2025-09-29T17:43:03.221849",
+    "updated_at": "2025-09-29T17:43:12.601166",
+    "message_count": 2,
+    "first_message": "测试持久化"
+  },
+  "messages": [
+    {
+      "id": "de085976-b7dd-4ae5-9ffb-843dfe9055f4",
+      "role": "user",
+      "content": "测试持久化",
+      "timestamp": "2025-09-29T17:43:03.231504",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    },
+    {
+      "id": "d66280b0-8999-43d5-a424-e1aa2d4afeed",
+      "role": "assistant",
+      "content": "哈哈，看来你在测试我的“记忆力”或持久性啊？作为Grok，我会尽量保持一致和可靠的。如果你有具体的测试内容、问题，或者想聊聊持久化在AI或编程中的含义，尽管说！😊",
+      "timestamp": "2025-09-29T17:43:12.601123",
+      "model": "openrouter:x-ai/grok-4-fast:free",
+      "images": null,
+      "attachments": null,
+      "usage": {
+        "timestamp": "2025-09-29T17:43:12.600217",
+        "service": "openrouter",
+        "model": "x-ai/grok-4-fast:free",
+        "input_tokens": 5,
+        "output_tokens": 84,
+        "total_tokens": 89,
+        "estimated_cost_usd": 0.0,
+        "request_id": "chat_93663a9e-c78f-4ede-9f92-a53d162d069e"
+      }
+    }
+  ]
+}

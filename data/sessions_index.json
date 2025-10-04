@@ -1,0 +1,60 @@
+{
+  "sessions": [
+    {
+      "id": "0d836913-dfcb-4f72-80cc-5623431a5d47",
+      "title": "claude code 降低用量 有这事情吗",
+      "created_at": "2025-10-02T22:24:44.687272",
+      "updated_at": "2025-10-02T22:26:01.565278",
+      "message_count": 3,
+      "first_message": "claude code 降低用量 有这事情吗"
+    },
+    {
+      "id": "c72ae5a8-f210-44ff-80f4-c3224f060167",
+      "title": "Hello world test",
+      "created_at": "2025-09-29T20:08:40.689655",
+      "updated_at": "2025-09-29T20:08:40.691880",
+      "message_count": 1,
+      "first_message": "Hello world test"
+    },
+    {
+      "id": "6561d074-9959-48b2-b12a-6a066c2d0c0a",
+      "title": "AGI什么时候能实现",
+      "created_at": "2025-09-29T17:46:01.008517",
+      "updated_at": "2025-09-29T17:46:30.628405",
+      "message_count": 2,
+      "first_message": "AGI什么时候能实现"
+    },
+    {
+      "id": "93663a9e-c78f-4ede-9f92-a53d162d069e",
+      "title": "测试持久化",
+      "created_at": "2025-09-29T17:43:03.221849",
+      "updated_at": "2025-09-29T17:43:12.601166",
+      "message_count": 2,
+      "first_message": "测试持久化"
+    },
+    {
+      "id": "ef6f2265-844d-4c3a-a53f-6e1f6138b1e7",
+      "title": "你预计AGI什么时候实现",
+      "created_at": "2025-09-29T17:25:36.342410",
+      "updated_at": "2025-09-29T17:25:59.878937",
+      "message_count": 2,
+      "first_message": "你预计AGI什么时候实现"
+    },
+    {
+      "id": "43fce8d9-49e5-46fd-9896-e7b63346d8c5",
+      "title": "你好",
+      "created_at": "2025-09-29T17:22:32.113745",
+      "updated_at": "2025-09-29T17:22:32.115329",
+      "message_count": 1,
+      "first_message": "你好"
+    },
+    {
+      "id": "df473d26-f8e6-4df4-b351-5760e23c8112",
+      "title": "测试历史记忆",
+      "created_at": "2025-09-29T17:18:35.365788",
+      "updated_at": "2025-09-29T17:21:33.929647",
+      "message_count": 4,
+      "first_message": "我叫张三，今年25岁"
+    }
+  ]
+}

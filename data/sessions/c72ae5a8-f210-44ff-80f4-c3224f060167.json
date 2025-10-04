@@ -1,0 +1,22 @@
+{
+  "session": {
+    "id": "c72ae5a8-f210-44ff-80f4-c3224f060167",
+    "title": "Hello world test",
+    "created_at": "2025-09-29T20:08:40.689655",
+    "updated_at": "2025-09-29T20:08:40.691880",
+    "message_count": 1,
+    "first_message": "Hello world test"
+  },
+  "messages": [
+    {
+      "id": "0a0a99b4-ab00-4775-b5e1-f0a6c6b819c0",
+      "role": "user",
+      "content": "Hello world test",
+      "timestamp": "2025-09-29T20:08:40.691804",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    }
+  ]
+}

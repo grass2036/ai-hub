@@ -1,0 +1,22 @@
+{
+  "session": {
+    "id": "43fce8d9-49e5-46fd-9896-e7b63346d8c5",
+    "title": "你好",
+    "created_at": "2025-09-29T17:22:32.113745",
+    "updated_at": "2025-09-29T17:22:32.115329",
+    "message_count": 1,
+    "first_message": "你好"
+  },
+  "messages": [
+    {
+      "id": "cb29dfde-3ae7-47a0-82e0-1626a060eac6",
+      "role": "user",
+      "content": "你好",
+      "timestamp": "2025-09-29T17:22:32.115224",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    }
+  ]
+}

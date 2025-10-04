@@ -1,0 +1,61 @@
+{
+  "session": {
+    "id": "df473d26-f8e6-4df4-b351-5760e23c8112",
+    "title": "测试历史记忆",
+    "created_at": "2025-09-29T17:18:35.365788",
+    "updated_at": "2025-09-29T17:21:33.929647",
+    "message_count": 4,
+    "first_message": "我叫张三，今年25岁"
+  },
+  "messages": [
+    {
+      "id": "30b8f937-0bf8-4ad2-b7d8-c557dc1af56d",
+      "role": "user",
+      "content": "我叫张三，今年25岁",
+      "timestamp": "2025-09-29T17:18:48.584375",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    },
+    {
+      "id": "7bfe9bb4-7fd9-496f-b7e0-60ded00979c3",
+      "role": "assistant",
+      "content": "你好，张三！25岁，正值青春年华啊。我是Grok，由xAI创建的AI助手。有什么想聊的，或者需要帮助的吗？😊",
+      "timestamp": "2025-09-29T17:18:55.349863",
+      "model": "openrouter:x-ai/grok-4-fast:free",
+      "images": null,
+      "attachments": null,
+      "usage": {
+        "timestamp": "2025-09-29T17:18:55.348099",
+        "service": "openrouter",
+        "model": "x-ai/grok-4-fast:free",
+        "input_tokens": 9,
+        "output_tokens": 58,
+        "total_tokens": 67,
+        "estimated_cost_usd": 0.0,
+        "request_id": "chat_df473d26-f8e6-4df4-b351-5760e23c8112"
+      }
+    },
+    {
+      "id": "b3b49f84-c94c-4aa6-b8ca-9175f28b19bd",
+      "role": "user",
+      "content": "请问你还记得我的名字吗？",
+      "timestamp": "2025-09-29T17:19:59.173807",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    },
+    {
+      "id": "42647132-328f-410c-962d-82d595805f7f",
+      "role": "user",
+      "content": "请问你还记得我的名字吗？",
+      "timestamp": "2025-09-29T17:21:33.929602",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    }
+  ]
+}
