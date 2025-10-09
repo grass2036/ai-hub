@@ -1,10 +1,12 @@
 import json
 import uuid
+import asyncio
 from datetime import datetime, date
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from enum import Enum
+from concurrent.futures import ThreadPoolExecutor
 
 class MessageRole(str, Enum):
     USER = "user"
@@ -44,6 +46,11 @@ class SessionManager:
         self.sessions_dir = self.data_dir / "sessions"
         self.sessions_dir.mkdir(exist_ok=True)
         self.sessions_index_file = self.data_dir / "sessions_index.json"
+        self._executor = ThreadPoolExecutor(max_workers=4)
+        # 内存缓存
+        self._sessions_cache: Dict[str, Session] = {}
+        self._cache_ttl = 300  # 5分钟缓存
+        self._cache_timestamps: Dict[str, float] = {}
     
     def generate_session_id(self) -> str:
         """生成唯一的会话ID"""
@@ -52,6 +59,36 @@ class SessionManager:
     def generate_message_id(self) -> str:
         """生成唯一的消息ID"""
         return str(uuid.uuid4())
+
+    def _is_cache_valid(self, session_id: str) -> bool:
+        """检查缓存是否有效"""
+        if session_id not in self._cache_timestamps:
+            return False
+        import time
+        return time.time() - self._cache_timestamps[session_id] < self._cache_ttl
+
+    def _update_cache(self, session_id: str, session: Session):
+        """更新缓存"""
+        import time
+        self._sessions_cache[session_id] = session
+        self._cache_timestamps[session_id] = time.time()
+
+    async def _read_json_file(self, file_path: Path) -> Dict[str, Any]:
+        """异步读取JSON文件"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            self._executor,
+            lambda: json.load(open(file_path, 'r', encoding='utf-8'))
+        )
+
+    async def _write_json_file(self, file_path: Path, data: Dict[str, Any]):
+        """异步写入JSON文件"""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self._executor,
+            lambda: json.dump(data, open(file_path, 'w', encoding='utf-8'),
+                            indent=2, ensure_ascii=False)
+        )
     
     async def create_session(self, title: Optional[str] = None) -> Session:
         """创建新会话"""
@@ -75,28 +112,37 @@ class SessionManager:
             "session": session.to_dict(),
             "messages": []
         }
-        
-        with open(session_file, 'w', encoding='utf-8') as f:
-            json.dump(session_data, f, indent=2, ensure_ascii=False)
-        
+
+        await self._write_json_file(session_file, session_data)
+
         # 更新会话索引
         await self._update_sessions_index(session)
-        
+
+        # 更新缓存
+        self._update_cache(session_id, session)
+
         return session
     
     async def get_session(self, session_id: str) -> Optional[Session]:
-        """获取会话信息"""
+        """获取会话信息（带缓存）"""
+        # 检查缓存
+        if self._is_cache_valid(session_id):
+            return self._sessions_cache.get(session_id)
+
         session_file = self.sessions_dir / f"{session_id}.json"
-        
+
         if not session_file.exists():
             return None
-        
+
         try:
-            with open(session_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            
+            data = await self._read_json_file(session_file)
             session_data = data.get("session", {})
-            return Session(**session_data)
+            session = Session(**session_data)
+
+            # 更新缓存
+            self._update_cache(session_id, session)
+
+            return session
         except Exception as e:
             print(f"Error loading session {session_id}: {e}")
             return None

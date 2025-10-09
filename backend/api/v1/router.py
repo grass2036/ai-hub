@@ -13,11 +13,13 @@ from .chat import router as chat_router
 from .stats import router as stats_router
 from .sessions import router as sessions_router
 from .search import router as search_router
+from .health import router as health_router
+from .models import router as models_router
+from .config import router as config_router
 from .auth.auth import router as auth_router
 from .developer.api_keys import router as api_keys_router
 from .developer.chat import router as developer_chat_router
 from .developer.usage import router as developer_usage_router
-# from .models import router as models_router
 # from .documents import router as documents_router
 # from .websocket import router as websocket_router
 
@@ -33,7 +35,9 @@ async def api_root():
             "stats": "/stats",
             "sessions": "/sessions",
             "search": "/search",
-            "models": "/models", 
+            "models": "/models",
+            "health": "/health",
+            "config": "/config",
             "documents": "/documents",
             "websocket": "/ws"
         }
@@ -83,6 +87,9 @@ async def health_check():
 
 
 # Include sub-routers as they are developed
+api_router.include_router(health_router, prefix="/health", tags=["health"])
+api_router.include_router(models_router, prefix="/models", tags=["models"])
+api_router.include_router(config_router, prefix="/config", tags=["config"])
 api_router.include_router(auth_router, tags=["authentication"])
 api_router.include_router(api_keys_router, prefix="/developer/api-keys", tags=["developer"])
 api_router.include_router(developer_chat_router, prefix="/developer/chat", tags=["developer"])

@@ -1,0 +1,22 @@
+{
+  "session": {
+    "id": "e091abbc-5501-40e6-9101-f6aaf9762780",
+    "title": "测试会话",
+    "created_at": "2025-10-07T22:39:57.020320",
+    "updated_at": "2025-10-07T22:39:57.021512",
+    "message_count": 1,
+    "first_message": "Hello, AI Hub!"
+  },
+  "messages": [
+    {
+      "id": "fb8ee6f5-354a-4d1e-a2b2-f1be8fa4c07f",
+      "role": "user",
+      "content": "Hello, AI Hub!",
+      "timestamp": "2025-10-07T22:39:57.021490",
+      "model": null,
+      "images": null,
+      "attachments": null,
+      "usage": null
+    }
+  ]
+}

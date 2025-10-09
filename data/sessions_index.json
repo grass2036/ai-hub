@@ -1,6 +1,22 @@
 {
   "sessions": [
     {
+      "id": "c3532adb-e9b5-4459-b412-40b715989f9c",
+      "title": "测试会话",
+      "created_at": "2025-10-07T22:43:00.378930",
+      "updated_at": "2025-10-07T22:43:00.379847",
+      "message_count": 1,
+      "first_message": "Hello, AI Hub!"
+    },
+    {
+      "id": "e091abbc-5501-40e6-9101-f6aaf9762780",
+      "title": "测试会话",
+      "created_at": "2025-10-07T22:39:57.020320",
+      "updated_at": "2025-10-07T22:39:57.021512",
+      "message_count": 1,
+      "first_message": "Hello, AI Hub!"
+    },
+    {
       "id": "0d836913-dfcb-4f72-80cc-5623431a5d47",
       "title": "claude code 降低用量 有这事情吗",
       "created_at": "2025-10-02T22:24:44.687272",

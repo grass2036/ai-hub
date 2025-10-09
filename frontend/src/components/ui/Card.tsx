@@ -18,24 +18,32 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     },
     ref
   ) => {
-    const baseClasses = 'bg-white shadow rounded-lg overflow-hidden';
+    const baseClasses = 'bg-white shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 rounded-xl overflow-hidden backdrop-blur-sm bg-white/95';
     const classes = `${baseClasses} ${className}`;
-    
+
     return (
-      <div ref={ref} className={classes} {...props}>
+      <div
+        ref={ref}
+        className={classes}
+        {...props}
+        style={{
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
+        }}
+      >
         {(title || subtitle || actions) && (
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex justify-between items-start">
-              <div>
+          <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+              <div className="min-w-0 flex-1">
                 {title && (
-                  <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">{title}</h3>
                 )}
                 {subtitle && (
-                  <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+                  <p className="mt-1 text-sm text-gray-600 break-words">{subtitle}</p>
                 )}
               </div>
               {actions && (
-                <div className="ml-4 flex-shrink-0">
+                <div className="flex-shrink-0">
                   {actions}
                 </div>
               )}

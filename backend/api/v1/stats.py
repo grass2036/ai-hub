@@ -1,5 +1,5 @@
 """
-Usage Statistics API Routes
+Usage Statistics API Routes (Optimized with Caching)
 """
 
 from fastapi import APIRouter, HTTPException, Query
@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 from datetime import date
 from backend.core.ai_service import ai_manager
+from backend.core.cache_service import cache_result, cache_stats, cleanup_expired_cache
 
 router = APIRouter()
 
@@ -31,11 +32,12 @@ class DailyStatsResponse(BaseModel):
 
 
 @router.get("/usage", response_model=UsageStatsResponse)
+@cache_result(ttl=60, key_prefix="usage_stats")  # 缓存1分钟
 async def get_usage_stats(
     days: int = Query(default=7, ge=1, le=365, description="统计天数")
 ):
     """
-    获取使用统计信息
+    获取使用统计信息（缓存优化）
     """
     try:
         stats = await ai_manager.cost_tracker.get_cost_summary(days=days)
@@ -45,11 +47,12 @@ async def get_usage_stats(
 
 
 @router.get("/daily", response_model=DailyStatsResponse)
+@cache_result(ttl=300, key_prefix="daily_stats")  # 缓存5分钟
 async def get_daily_stats(
     target_date: Optional[str] = Query(default=None, description="目标日期 (YYYY-MM-DD)")
 ):
     """
-    获取特定日期的统计信息
+    获取特定日期的统计信息（缓存优化）
     """
     try:
         stats = await ai_manager.cost_tracker.get_daily_stats(target_date)
@@ -97,16 +100,17 @@ async def get_recent_usage(
 
 
 @router.get("/summary")
+@cache_result(ttl=120, key_prefix="summary_stats")  # 缓存2分钟
 async def get_summary_stats():
     """
-    获取汇总统计信息
+    获取汇总统计信息（缓存优化）
     """
     try:
         # 获取不同时间段的统计
         today_stats = await ai_manager.cost_tracker.get_daily_stats()
         week_stats = await ai_manager.cost_tracker.get_cost_summary(days=7)
         month_stats = await ai_manager.cost_tracker.get_cost_summary(days=30)
-        
+
         return {
             "today": {
                 "cost": today_stats.get("total_cost", 0.0),
@@ -126,6 +130,42 @@ async def get_summary_stats():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取汇总统计失败: {str(e)}")
+
+
+@router.get("/cache/stats")
+async def get_cache_stats():
+    """
+    获取缓存统计信息
+    """
+    try:
+        return cache_stats()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取缓存统计失败: {str(e)}")
+
+
+@router.post("/cache/clear")
+async def clear_cache_endpoint():
+    """
+    清空缓存
+    """
+    try:
+        from backend.core.cache_service import clear_cache
+        clear_cache()
+        return {"message": "缓存已清空"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"清空缓存失败: {str(e)}")
+
+
+@router.post("/cache/cleanup")
+async def cleanup_cache():
+    """
+    清理过期缓存
+    """
+    try:
+        cleaned_count = cleanup_expired_cache()
+        return {"message": f"已清理 {cleaned_count} 个过期缓存项"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"清理缓存失败: {str(e)}")
 
 
 @router.get("/models")

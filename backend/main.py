@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.api.v1.router import api_router
 from backend.config.settings import get_settings
+from backend.middleware.error_handler import ErrorHandlingMiddleware, PerformanceMiddleware, setup_error_handlers
 
 # Get settings instance
 settings = get_settings()
@@ -29,6 +30,10 @@ app = FastAPI(
     openapi_url="/api/openapi.json" if settings.enable_api_docs else None
 )
 
+# Performance and error handling middleware
+app.add_middleware(PerformanceMiddleware)
+app.add_middleware(ErrorHandlingMiddleware)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -41,6 +46,9 @@ app.add_middleware(
 # Static files (for uploaded documents, etc.)
 os.makedirs("data/uploads", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="data/uploads"), name="uploads")
+
+# Setup error handlers
+setup_error_handlers(app)
 
 # Include API router
 app.include_router(api_router, prefix="/api/v1", tags=["api"])

@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # 简化版后端服务 (用于开发)
+  backend-dev:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: ai-hub-backend-dev
+    ports:
+      - "8001:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-sk-or-v1-your-key-here}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-your-gemini-key-here}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-sk-your-openai-key-here}
+    volumes:
+      - ./backend:/app/backend
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - ai-hub-dev-network
+    restart: unless-stopped
+    command: ["python", "backend/simple_main.py"]
+
+  # 前端开发服务
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: ../deployment/docker/Dockerfile.frontend.dev
+    container_name: ai-hub-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8001
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - ai-hub-dev-network
+    restart: unless-stopped
+    depends_on:
+      - backend-dev
+
+networks:
+  ai-hub-dev-network:
+    driver: bridge
+    name: ai-hub-dev-network

@@ -32,4 +32,6 @@ export interface UsageStats {
   quota_reset_at: string;
   days_until_reset: number;
   plan: string;
+  requests_today: number;
+  total_cost: number;
 }
