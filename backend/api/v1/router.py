@@ -20,6 +20,10 @@ from .auth.auth import router as auth_router
 from .developer.api_keys import router as api_keys_router
 from .developer.chat import router as developer_chat_router
 from .developer.usage import router as developer_usage_router
+from .organizations import router as organizations_router
+from .teams import router as teams_router
+from .budgets import router as budgets_router
+from .org_api_keys import router as org_api_keys_router
 # from .documents import router as documents_router
 # from .websocket import router as websocket_router
 
@@ -38,6 +42,10 @@ async def api_root():
             "models": "/models",
             "health": "/health",
             "config": "/config",
+            "organizations": "/organizations",
+            "teams": "/teams",
+            "budgets": "/budgets",
+            "api_keys": "/api-keys",
             "documents": "/documents",
             "websocket": "/ws"
         }
@@ -94,6 +102,10 @@ api_router.include_router(auth_router, tags=["authentication"])
 api_router.include_router(api_keys_router, prefix="/developer/api-keys", tags=["developer"])
 api_router.include_router(developer_chat_router, prefix="/developer/chat", tags=["developer"])
 api_router.include_router(developer_usage_router, prefix="/developer/usage", tags=["developer"])
+api_router.include_router(organizations_router, prefix="/organizations", tags=["organizations"])
+api_router.include_router(teams_router, prefix="/teams", tags=["teams"])
+api_router.include_router(budgets_router, prefix="/budgets", tags=["budgets"])
+api_router.include_router(org_api_keys_router, tags=["api_keys"])
 api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
 api_router.include_router(stats_router, prefix="/stats", tags=["stats"])
 api_router.include_router(sessions_router, prefix="/sessions", tags=["sessions"])

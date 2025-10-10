@@ -99,6 +99,24 @@ export default function DashboardLayout({
               📊 仪表板
             </a>
             <a
+              href="/dashboard/organizations"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              🏢 组织管理
+            </a>
+            <a
+              href="/dashboard/teams"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              👥 团队管理
+            </a>
+            <a
+              href="/dashboard/budgets"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              💰 预算管理
+            </a>
+            <a
               href="/dashboard/api-keys"
               className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
             >
