@@ -1,0 +1,17 @@
+# AI Hub Platform Python SDK 依赖
+
+# HTTP请求库
+requests>=2.25.0,<3.0.0
+
+# 数据验证
+pydantic>=1.8.0,<3.0.0
+
+# 类型检查支持
+typing-extensions>=3.7.4,<5.0.0
+
+# 开发依赖（可选）
+# pytest>=6.0
+# pytest-cov>=2.0
+# black>=21.0
+# flake8>=3.8
+# mypy>=0.900

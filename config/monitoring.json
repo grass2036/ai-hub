@@ -1,0 +1,86 @@
+{
+  "monitoring": {
+    "enabled": true,
+    "service_name": "ai-hub",
+    "environment": "production",
+    "update_interval": 30,
+    "buffer_size": 10000,
+    "retention_days": 30
+  },
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "service_name": "ai-hub",
+    "console_logging": true,
+    "file_logging": true,
+    "buffer_size": 10000,
+    "flush_interval": 60,
+    "file_logging": {
+      "path": "logs/application.log",
+      "max_bytes": 104857600,
+      "backup_count": 5
+    },
+    "elasticsearch": {
+      "hosts": ["http://elasticsearch:9200"],
+      "username": "",
+      "password": "",
+      "verify_certs": false
+    },
+    "s3": {
+      "access_key": "",
+      "secret_key": "",
+      "region": "us-east-1",
+      "bucket": "ai-hub-logs"
+    }
+  },
+  "alerting": {
+    "enabled": true,
+    "default_rules": true,
+    "email_config": {
+      "enabled": true,
+      "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "use_tls": true,
+        "username": "alerts@aihub.com",
+        "password": "",
+        "from_email": "AI Hub Monitor <alerts@aihub.com>"
+      },
+      "recipients": ["admin@aihub.com", "devops@aihub.com"]
+    },
+    "slack_config": {
+      "enabled": true,
+      "webhook_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+      "channel": "#ai-hub-alerts"
+    },
+    "webhook_config": {
+      "enabled": true,
+      "url": "https://api.aihub.com/webhooks/alerts",
+      "method": "POST",
+      "headers": {
+        "Authorization": "Bearer YOUR_WEBHOOK_TOKEN",
+        "Content-Type": "application/json"
+      }
+    },
+    "dingtalk_config": {
+      "enabled": false,
+      "webhook_url": "",
+      "secret": ""
+    }
+  },
+  "metrics": {
+    "enabled": true,
+    "collect_system_metrics": true,
+    "collect_application_metrics": true,
+    "collect_business_metrics": true,
+    "performance_tracking": true,
+    "error_tracking": true,
+    "usage_tracking": true
+  },
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "password": "your_redis_password",
+    "db": 0
+  }
+}

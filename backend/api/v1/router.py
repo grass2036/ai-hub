@@ -17,13 +17,27 @@ from .health import router as health_router
 from .models import router as models_router
 from .config import router as config_router
 from .auth.auth import router as auth_router
-from .developer.api_keys import router as api_keys_router
+from .developer.auth import router as developer_auth_router
+from .developer.keys import router as api_keys_router
 from .developer.chat import router as developer_chat_router
 from .developer.usage import router as developer_usage_router
+from .developer.batch import router as developer_batch_router
 from .organizations import router as organizations_router
 from .teams import router as teams_router
 from .budgets import router as budgets_router
 from .org_api_keys import router as org_api_keys_router
+from .payments import router as payments_router
+from .audit import router as audit_router
+from .permissions import router as permissions_router
+from .monitoring import router as monitoring_router
+from .ai_advanced import router as ai_advanced_router
+from .operations import router as operations_router
+from .tenant import router as tenant_router
+from .analytics import router as analytics_router
+from .performance import router as performance_router
+from .ha import router as ha_router
+from .backup import router as backup_router
+from backend.api.v2 import v2_router
 # from .documents import router as documents_router
 # from .websocket import router as websocket_router
 
@@ -46,6 +60,18 @@ async def api_root():
             "teams": "/teams",
             "budgets": "/budgets",
             "api_keys": "/api-keys",
+            "payments": "/payments",
+            "audit": "/audit",
+            "permissions": "/permissions",
+            "monitoring": "/monitoring",
+            "ai_advanced": "/ai-advanced",
+            "operations": "/operations",
+            "tenant": "/tenant",
+            "analytics": "/analytics",
+            "performance": "/performance",
+            "ha": "/ha",
+            "backup": "/backup",
+            "v2": "/v2",
             "documents": "/documents",
             "websocket": "/ws"
         }
@@ -99,13 +125,27 @@ api_router.include_router(health_router, prefix="/health", tags=["health"])
 api_router.include_router(models_router, prefix="/models", tags=["models"])
 api_router.include_router(config_router, prefix="/config", tags=["config"])
 api_router.include_router(auth_router, tags=["authentication"])
-api_router.include_router(api_keys_router, prefix="/developer/api-keys", tags=["developer"])
+api_router.include_router(developer_auth_router, prefix="/developer/auth", tags=["developer"])
+api_router.include_router(api_keys_router, prefix="/developer/keys", tags=["developer"])
 api_router.include_router(developer_chat_router, prefix="/developer/chat", tags=["developer"])
 api_router.include_router(developer_usage_router, prefix="/developer/usage", tags=["developer"])
+api_router.include_router(developer_batch_router, prefix="/developer/batch", tags=["developer"])
 api_router.include_router(organizations_router, prefix="/organizations", tags=["organizations"])
 api_router.include_router(teams_router, prefix="/teams", tags=["teams"])
 api_router.include_router(budgets_router, prefix="/budgets", tags=["budgets"])
 api_router.include_router(org_api_keys_router, tags=["api_keys"])
+api_router.include_router(payments_router, tags=["payments"])
+api_router.include_router(audit_router, prefix="/audit", tags=["audit"])
+api_router.include_router(permissions_router, prefix="/permissions", tags=["permissions"])
+api_router.include_router(monitoring_router, prefix="/monitoring", tags=["monitoring"])
+api_router.include_router(ai_advanced_router, prefix="/ai-advanced", tags=["ai_advanced"])
+api_router.include_router(operations_router, prefix="/operations", tags=["operations"])
+api_router.include_router(tenant_router, prefix="/tenant", tags=["tenant"])
+api_router.include_router(analytics_router, prefix="/analytics", tags=["analytics"])
+api_router.include_router(performance_router, prefix="/performance", tags=["performance"])
+api_router.include_router(ha_router, tags=["high-availability"])
+api_router.include_router(backup_router, tags=["backup-recovery"])
+api_router.include_router(v2_router, tags=["api-v2"])
 api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
 api_router.include_router(stats_router, prefix="/stats", tags=["stats"])
 api_router.include_router(sessions_router, prefix="/sessions", tags=["sessions"])

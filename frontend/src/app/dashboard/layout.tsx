@@ -117,6 +117,12 @@ export default function DashboardLayout({
               💰 预算管理
             </a>
             <a
+              href="/dashboard/billing"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              💳 计费订阅
+            </a>
+            <a
               href="/dashboard/api-keys"
               className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
             >
@@ -129,6 +135,30 @@ export default function DashboardLayout({
               📈 使用统计
             </a>
             <a
+              href="/dashboard/reports"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              📊 使用报告
+            </a>
+            <a
+              href="/dashboard/audit"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              📋 审计日志
+            </a>
+            <a
+              href="/dashboard/permissions"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              🔐 权限管理
+            </a>
+          <a
+              href="/dashboard/monitoring"
+              className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
+            >
+              📊 系统监控
+            </a>
+          <a
               href="/chat"
               className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50"
             >

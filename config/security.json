@@ -1,0 +1,227 @@
+{
+  "authentication": {
+    "jwt": {
+      "secret_key": "your-super-secret-jwt-key-change-in-production",
+      "algorithm": "HS256",
+      "access_token_expire_minutes": 30,
+      "refresh_token_expire_days": 7,
+      "issuer": "ai-hub-platform",
+      "audience": "ai-hub-users"
+    },
+    "password_policy": {
+      "min_length": 8,
+      "max_length": 128,
+      "require_uppercase": true,
+      "require_lowercase": true,
+      "require_digits": true,
+      "require_special_chars": true,
+      "forbidden_patterns": ["password", "123456", "qwerty", "admin", "letmein"],
+      "common_passwords": ["password", "123456", "qwerty", "abc123", "password123"],
+      "min_score": 60
+    },
+    "session_policy": {
+      "max_idle_time": 3600,
+      "max_session_time": 28800,
+      "require_same_ip": false,
+      "max_concurrent_sessions": 5,
+      "enforce_concurrent_limit": true
+    },
+    "mfa": {
+      "enabled": false,
+      "issuer": "AI Hub Platform",
+      "backup_codes_count": 10,
+      "qr_code_size": 200
+    }
+  },
+  "authorization": {
+    "rbac_enabled": true,
+    "default_roles": ["user"],
+    "permission_cache_ttl": 300,
+    "role_hierarchy": {
+      "super_admin": ["admin", "organization_admin"],
+      "admin": ["organization_admin", "support"],
+      "organization_admin": ["manager", "developer"],
+      "manager": ["developer", "user"],
+      "developer": ["user"],
+      "support": ["readonly"],
+      "user": [],
+      "readonly": []
+    }
+  },
+  "api_keys": {
+    "key_length": 32,
+    "key_prefix_length": 8,
+    "max_keys_per_user": 10,
+    "default_rate_limit": 1000,
+    "rate_limit_window": 3600,
+    "require_https": true,
+    "allowed_origins": ["https://api.aihub.com", "https://app.aihub.com"]
+  },
+  "encryption": {
+    "master_key": "your-super-secret-encryption-key-change-in-production-32-chars",
+    "default_algorithm": "fernet",
+    "key_rotation_days": 90,
+    "field_encryption_enabled": true,
+    "data_masking_enabled": true,
+    "encrypted_fields": [
+      "email",
+      "phone",
+      "mobile",
+      "credit_card",
+      "ssn",
+      "social_security_number",
+      "passport_number",
+      "driver_license",
+      "bank_account",
+      "credit_card_number",
+      "api_key",
+      "password",
+      "secret",
+      "token",
+      "private_key",
+      "webhook_secret",
+      "oauth_secret"
+    ]
+  },
+  "security_policy": {
+    "password_policy": {
+      "min_length": 8,
+      "max_length": 128,
+      "require_uppercase": true,
+      "require_lowercase": true,
+      "require_digits": true,
+      "require_special_chars": true,
+      "forbidden_patterns": ["password", "123456", "qwerty"],
+      "min_score": 60
+    },
+    "session_policy": {
+      "max_idle_time": 3600,
+      "max_session_time": 28800,
+      "require_same_ip": false,
+      "max_concurrent_sessions": 5
+    },
+    "rate_limit_policy": {
+      "window_size": 3600,
+      "max_requests": 1000,
+      "burst_size": 100
+    },
+    "ip_whitelist": [],
+    "ip_blacklist": [],
+    "access_time_policy": {
+      "enabled": false,
+      "allowed_weekdays": [0, 1, 2, 3, 4, 5, 6],
+      "allowed_time_ranges": [
+        {"start": "00:00", "end": "23:59"}
+      ],
+      "timezone": "UTC"
+    }
+  },
+  "audit": {
+    "enabled": true,
+    "log_all_requests": false,
+    "log_sensitive_operations": true,
+    "geoip_database_path": "/app/data/GeoLite2-City.mmdb",
+    "risk_countries": ["CN", "RU", "KP", "IR", "SY"],
+    "suspicious_ip_patterns": [
+      "10.0.0.",
+      "192.168.",
+      "172.16.",
+      "127.0.0.1"
+    ],
+    "alert_thresholds": {
+      "high_risk_score": 8.0,
+      "failed_login_attempts": 5,
+      "unusual_access_frequency": 50,
+      "suspicious_location_access": 1,
+      "privilege_escalation_attempt": 1
+    },
+    "retention_days": 90,
+    "real_time_alerts": true,
+    "slack_webhook_url": "",
+    "email_alerts": {
+      "enabled": true,
+      "recipients": ["security@aihub.com"]
+    }
+  },
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "password": "your_redis_password",
+    "db": 1,
+    "connection_pool_size": 10,
+    "socket_timeout": 5,
+    "socket_connect_timeout": 5
+  },
+  "csrf": {
+    "enabled": true,
+    "token_length": 32,
+    "token_expiry": 3600,
+    "secure_cookie": true,
+    "httponly_cookie": true
+  },
+  "cors": {
+    "enabled": true,
+    "allow_origins": ["https://api.aihub.com", "https://app.aihub.com"],
+    "allow_methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    "allow_headers": ["Authorization", "Content-Type", "X-API-Key", "X-Request-ID"],
+    "expose_headers": ["X-Total-Count", "X-Rate-Limit-Remaining"],
+    "max_age": 86400,
+    "allow_credentials": true
+  },
+  "headers": {
+    "security_headers": {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'",
+      "Referrer-Policy": "strict-origin-when-cross-origin"
+    }
+  },
+  "rate_limiting": {
+    "enabled": true,
+    "default_limits": {
+      "per_minute": 60,
+      "per_hour": 1000,
+      "per_day": 10000
+    },
+    "endpoints": {
+      "/api/v1/auth/login": {
+        "per_minute": 5,
+        "per_hour": 20
+      },
+      "/api/v1/auth/register": {
+        "per_minute": 3,
+        "per_hour": 10
+      },
+      "/api/v1/auth/forgot-password": {
+        "per_minute": 3,
+        "per_hour": 5
+      }
+    }
+  },
+  "input_validation": {
+    "max_request_size": 10485760,
+    "max_field_length": 10000,
+    "allowed_mime_types": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "sanitize_html": true,
+    "sql_injection_protection": true,
+    "xss_protection": true
+  },
+  "ssl_tls": {
+    "enabled": true,
+    "min_version": "TLSv1.2",
+    "ciphers": [
+      "ECDHE-RSA-AES256-GCM-SHA384",
+      "ECDHE-RSA-AES128-GCM-SHA256",
+      "ECDHE-RSA-AES256-SHA384",
+      "ECDHE-RSA-AES128-SHA256"
+    ],
+    "hsts_enabled": true,
+    "certificate_validation": true
+  }
+}

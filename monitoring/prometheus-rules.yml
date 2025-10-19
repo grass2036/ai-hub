@@ -1,0 +1,271 @@
+# Prometheus 告警规则配置
+# Week 6 Day 4: 系统监控和日志配置
+
+groups:
+  - name: ai-hub-system-alerts
+    rules:
+      # CPU使用率告警
+      - alert: HighCPUUsage
+        expr: system_cpu_usage > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "高CPU使用率告警"
+          description: "AI Hub系统CPU使用率超过80%，当前值: {{ $value }}%"
+
+      - alert: CriticalCPUUsage
+        expr: system_cpu_usage > 95
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "严重CPU使用率告警"
+          description: "AI Hub系统CPU使用率超过95%，当前值: {{ $value }}%，需要立即处理"
+
+      # 内存使用率告警
+      - alert: HighMemoryUsage
+        expr: system_memory_usage > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "高内存使用率告警"
+          description: "AI Hub系统内存使用率超过85%，当前值: {{ $value }}%"
+
+      - alert: CriticalMemoryUsage
+        expr: system_memory_usage > 95
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "严重内存使用率告警"
+          description: "AI Hub系统内存使用率超过95%，当前值: {{ $value }}%，需要立即处理"
+
+      # 磁盘使用率告警
+      - alert: HighDiskUsage
+        expr: system_disk_usage > 90
+        for: 10m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "高磁盘使用率告警"
+          description: "AI Hub系统磁盘使用率超过90%，当前值: {{ $value }}%"
+
+      - alert: CriticalDiskUsage
+        expr: system_disk_usage > 98
+        for: 5m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: system
+        annotations:
+          summary: "严重磁盘使用率告警"
+          description: "AI Hub系统磁盘使用率超过98%，当前值: {{ $value }}%，需要立即清理"
+
+  - name: ai-hub-application-alerts
+    rules:
+      # HTTP错误率告警
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: error
+          service: ai-hub
+          component: application
+        annotations:
+          summary: "高HTTP错误率"
+          description: "AI Hub应用HTTP 5xx错误率超过5%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: CriticalErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: application
+        annotations:
+          summary: "严重HTTP错误率"
+          description: "AI Hub应用HTTP 5xx错误率超过10%，当前值: {{ $value | humanizePercentage }}，服务可能不可用"
+
+      # 响应时间告警
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: application
+        annotations:
+          summary: "高响应时间"
+          description: "AI Hub应用95%分位响应时间超过2秒，当前值: {{ $value }}秒"
+
+      - alert: CriticalResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: application
+        annotations:
+          summary: "严重响应时间"
+          description: "AI Hub应用95%分位响应时间超过5秒，当前值: {{ $value }}秒，用户体验严重受影响"
+
+      # 活跃连接数告警
+      - alert: HighActiveConnections
+        expr: active_connections_total > 1000
+        for: 10m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: application
+        annotations:
+          summary: "高活跃连接数"
+          description: "AI Hub应用活跃连接数超过1000，当前值: {{ $value }}"
+
+      # 数据库连接告警
+      - alert: HighDatabaseConnections
+        expr: database_connections_active > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: database
+        annotations:
+          summary: "高数据库连接数"
+          description: "AI Hub数据库活跃连接数超过80，当前值: {{ $value }}"
+
+  - name: ai-hub-business-alerts
+    rules:
+      # 活跃用户数告警
+      - alert: LowActiveUsers
+        expr: active_users_total < 10
+        for: 15m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: business
+        annotations:
+          summary: "活跃用户数过低"
+          description: "AI Hub活跃用户数少于10，当前值: {{ $value }}"
+
+      # 服务可用性告警
+      - alert: LowServiceAvailability
+        expr: service_availability < 0.99
+        for: 5m
+        labels:
+          severity: error
+          service: ai-hub
+          component: business
+        annotations:
+          summary: "服务可用性过低"
+          description: "AI Hub服务可用性低于99%，当前值: {{ $value | humanizePercentage }}"
+
+      - alert: CriticalServiceAvailability
+        expr: service_availability < 0.95
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: business
+        annotations:
+          summary: "严重服务可用性"
+          description: "AI Hub服务可用性低于95%，当前值: {{ $value | humanizePercentage }}，服务严重影响用户"
+
+      # API收入告警
+      - alert: ZeroAPIRevenue
+        expr: increase(api_revenue_total[1h]) == 0
+        for: 2h
+        labels:
+          severity: warning
+          service: ai-hub
+          component: business
+        annotations:
+          summary: "API收入为零"
+          description: "AI Hub在过去2小时内API收入为零，可能存在计费问题"
+
+  - name: ai-hub-infrastructure-alerts
+    rules:
+      # Redis连接告警
+      - alert: RedisConnectionFailed
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: infrastructure
+        annotations:
+          summary: "Redis连接失败"
+          description: "AI Hub无法连接到Redis服务"
+
+      # 数据库连接告警
+      - alert: DatabaseConnectionFailed
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: ai-hub
+          component: infrastructure
+        annotations:
+          summary: "数据库连接失败"
+          description: "AI Hub无法连接到PostgreSQL数据库"
+
+      # 缓存命中率告警
+      - alert: LowCacheHitRate
+        expr: cache_hit_rate < 0.8
+        for: 10m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: infrastructure
+        annotations:
+          summary: "缓存命中率过低"
+          description: "AI Hub缓存命中率低于80%，当前值: {{ $value | humanizePercentage }}"
+
+  - name: ai-hub-security-alerts
+    rules:
+      # 认证失败告警
+      - alert: HighAuthenticationFailures
+        expr: rate(authentication_failures_total[5m]) > 10
+        for: 3m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: security
+        annotations:
+          summary: "高认证失败率"
+          description: "AI Hub认证失败率过高，可能存在暴力破解攻击，当前值: {{ $value }}/秒"
+
+      # 异常流量告警
+      - alert: UnusualTrafficPattern
+        expr: rate(http_requests_total[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: security
+        annotations:
+          summary: "异常流量模式"
+          description: "AI Hub检测到异常高流量，当前请求率: {{ $value }}/秒"
+
+      # 权限拒绝告警
+      - alert: HighAuthorizationDenials
+        expr: rate(authorization_denials_total[5m]) > 50
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-hub
+          component: security
+        annotations:
+          summary: "高权限拒绝率"
+          description: "AI Hub权限拒绝率过高，可能存在权限攻击，当前值: {{ $value }}/秒"
