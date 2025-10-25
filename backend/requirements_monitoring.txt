@@ -1,0 +1,8 @@
+# Monitoring and Performance Optimization Dependencies
+psutil>=5.9.0
+redis>=4.5.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+prometheus-client>=0.16.0
+grafana-api>=1.0.3
+aiofiles>=23.1.0

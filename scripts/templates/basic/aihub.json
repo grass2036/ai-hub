@@ -1,0 +1,24 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "id": "{{PROJECT_ID}}",
+  "version": "1.0.0",
+  "description": "AI Hub项目",
+  "type": "basic",
+  "author": "{{DEVELOPER_NAME}}",
+  "email": "{{DEVELOPER_EMAIL}}",
+  "organization": "{{ORGANIZATION}}",
+  "created_at": "{{DATE}}",
+  "dependencies": [],
+  "scripts": {
+    "start": "python main.py",
+    "dev": "python main.py --reload",
+    "test": "python -m pytest tests/",
+    "build": "echo 'No build required'",
+    "deploy": "echo 'No deployment required'"
+  },
+  "aihub": {
+    "version": ">=1.0.0",
+    "api_url": "http://localhost:8001",
+    "features": []
+  }
+}

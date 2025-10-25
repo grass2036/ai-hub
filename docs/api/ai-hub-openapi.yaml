@@ -1,0 +1,1765 @@
+openapi: 3.0.3
+info:
+  title: AI Hub Platform API
+  description: |
+    企业级AI应用平台API文档
+
+    ## 🎯 平台概述
+    AI Hub是一个企业级AI应用平台，集成了多种AI模型，提供流式响应、成本跟踪和多模���AI处理能力。
+
+    ## 🚀 Week 7 新功能
+    - **多模态AI服务**: 图像识别、语音处理、文档理解
+    - **智能工作流引擎**: 可视化工作流设计与执行
+    - **API文档与测试**: 完整的API文档和交互式测试
+
+    ## 🔗 主要功能
+    - AI聊天和对话管理
+    - 多模态AI处理（图像、语音、文档）
+    - 智能工作流引擎
+    - 企业级用户管理
+    - API密钥和配额管理
+    - 实时监控和审计
+
+  version: 1.0.0
+  contact:
+    name: AI Hub Team
+    email: support@ai-hub.com
+    url: https://ai-hub.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8001
+    description: 开发环境
+  - url: https://api.ai-hub.com
+    description: 生产环境
+
+tags:
+  - name: Authentication
+    description: 认证和授权
+  - name: Chat
+    description: AI聊天功能
+  - name: Multi-Modal AI
+    description: 多模态AI服务
+  - name: Workflow
+    description: 工作流引擎
+  - name: Users
+    description: 用户管理
+  - name: Organizations
+    description: 组织管理
+  - name: API Keys
+    description: API密钥管理
+  - name: Monitoring
+    description: 监控和统计
+
+paths:
+  # Authentication
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: 用户登录
+      description: 用户登录获取访问令牌
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: 认证失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Multi-Modal AI Services
+  /api/v1/multimodal/vision/analyze:
+    post:
+      tags:
+        - Multi-Modal AI
+      summary: 分析图像内容
+      description: |
+        使用AI分析图像内容，支持多种分析类型：
+        - general: 通用图像分析
+        - ocr: 文字识别(OCR)
+        - object_detection: 物体检测
+        - classification: 图像分类
+        - sentiment: 情感分析
+        - content_moderation: 内容审核
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: 要分析的图像文件
+                analysis_type:
+                  type: string
+                  enum: [general, ocr, object_detection, classification, sentiment, content_moderation]
+                  default: general
+                  description: 分析类型
+                prompt:
+                  type: string
+                  default: "请详细分析这张图片的内容"
+                  description: 分析提示词
+      responses:
+        '200':
+          description: 分析成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageAnalysisResponse'
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/multimodal/speech/transcribe:
+    post:
+      tags:
+        - Multi-Modal AI
+      summary: 音频转文字
+      description: 将音频文件转换为文字，支持多种任务类型
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - audio
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                  description: 要转录的音频文件
+                task_type:
+                  type: string
+                  enum: [transcription, translation, dictation, command_recognition]
+                  default: transcription
+                  description: 任务类型
+                language:
+                  type: string
+                  default: auto
+                  description: 语言代码
+      responses:
+        '200':
+          description: 转录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeechTranscriptionResponse'
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/multimodal/speech/synthesize:
+    post:
+      tags:
+        - Multi-Modal AI
+      summary: 文字转语音
+      description: 将文本转换为语音文件
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                  description: 要转换为语音的文本
+                voice:
+                  type: string
+                  enum: [alloy, echo, fable, onyx, nova, shimmer]
+                  default: alloy
+                  description: 声音类型
+                language:
+                  type: string
+                  default: en
+                  description: 语言代码
+      responses:
+        '200':
+          description: 语音合成成功
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/multimodal/document/analyze:
+    post:
+      tags:
+        - Multi-Modal AI
+      summary: 文档内容分析
+      description: 智能分析文档内容，提取关键信息并生成摘要
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - document
+              properties:
+                document:
+                  type: string
+                  format: binary
+                  description: 要分析的文档文件
+                query:
+                  type: string
+                  default: "请总结这个文档的主要内容"
+                  description: 分析查询
+      responses:
+        '200':
+          description: 分析成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentAnalysisResponse'
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/multimodal/process:
+    post:
+      tags:
+        - Multi-Modal AI
+      summary: 多模态综合处理
+      description: 同时处理多种类型的输入内容
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: 图像文件
+                audio:
+                  type: string
+                  format: binary
+                  description: 音频文件
+                document:
+                  type: string
+                  format: binary
+                  description: 文档文件
+                text:
+                  type: string
+                  description: 文本内容
+                task:
+                  type: string
+                  default: analyze
+                  description: 处理任务
+                prompt:
+                  type: string
+                  description: 通用提示词
+      responses:
+        '200':
+          description: 处理成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiModalProcessResponse'
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/multimodal/health:
+    get:
+      tags:
+        - Multi-Modal AI
+      summary: 多模态服务健康检查
+      description: 检查多模态AI服务的运行状态
+      responses:
+        '200':
+          description: 服务状态
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/v1/multimodal/capabilities:
+    get:
+      tags:
+        - Multi-Modal AI
+      summary: 获取服务能力信息
+      description: 获取多模态AI服务的详细能力信息
+      responses:
+        '200':
+          description: 能力信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilitiesResponse'
+
+  # Workflow Engine
+  /api/v1/workflow/:
+    get:
+      tags:
+        - Workflow
+      summary: 获取工作流列表
+      description: 获取所有工作流的列表，支持分类和标签过滤
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: 工作流分类过滤
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: 标签过滤
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+          description: 返回数量限制
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: 偏移量
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowListResponse'
+
+    post:
+      tags:
+        - Workflow
+      summary: 创建工作流
+      description: 创建新的工作流
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowCreateRequest'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowDetailResponse'
+        '400':
+          description: 请求参数错误
+        '500':
+          description: 服务器内部错误
+
+  /api/v1/workflow/{workflow_id}:
+    get:
+      tags:
+        - Workflow
+      summary: 获取工作流详情
+      description: 获取指定工作流的详细信息
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 工作流ID
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowDetailResponse'
+        '404':
+          description: 工作流不存在
+
+    put:
+      tags:
+        - Workflow
+      summary: 更新工作流
+      description: 更新指定工作流的信息
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 工作流ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowDetailResponse'
+        '404':
+          description: 工作流不存在
+
+    delete:
+      tags:
+        - Workflow
+      summary: 删除工作流
+      description: 删除指定的工作流
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 工作流ID
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                  type: boolean
+                  message:
+                  type: string
+        '404':
+          description: 工作流不存在
+
+  /api/v1/workflow/{workflow_id}/execute:
+    post:
+      tags:
+        - Workflow
+      summary: 执行工作流
+      description: 执行指定的工作流
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 工作流ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowExecuteRequest'
+      responses:
+        '200':
+          description: 执行开始
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowExecutionResponse'
+        '404':
+          description: 工作流不存在
+
+  /api/v1/workflow/{workflow_id}/executions:
+    get:
+      tags:
+        - Workflow
+      summary: 获取工作流执行历史
+      description: 获取指定工作流的执行历史记录
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 工作流ID
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, running, completed, failed, cancelled]
+          description: 执行状态过滤
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+          description: 返回数量限制
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowExecutionResponse'
+
+  /api/v1/workflow/templates/:
+    get:
+      tags:
+        - Workflow
+      summary: 获取工作流模板列表
+      description: 获取可用的工作流模板
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: 模板分类过滤
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: 标签过滤
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowTemplateResponse'
+
+  /api/v1/workflow/templates/{template_id}/create:
+    post:
+      tags:
+        - Workflow
+      summary: 从模板创建工作流
+      description: 基于指定模板创建新的工作流
+      parameters:
+        - name: template_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 模板ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowFromTemplateRequest'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowDetailResponse'
+        '404':
+          description: 模板不存在
+
+  /api/v1/workflow/designer/node-types:
+    get:
+      tags:
+        - Workflow
+      summary: 获取工作流节点类型
+      description: 获取支持的工作流节点类型定义
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeTypesResponse'
+
+  /api/v1/workflow/designer/validation:
+    post:
+      tags:
+        - Workflow
+      summary: 验证工作流设计
+      description: 验证工作流设计的正确性
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workflow_data:
+                  type: object
+                  description: 工作流设计数据
+      responses:
+        '200':
+          description: 验证结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowValidationResponse'
+
+  # Chat API
+  /api/v1/chat/stream:
+    get:
+      tags:
+        - Chat
+      summary: 流式聊天
+      description: 使用Server-Sent Events进行流式AI对话
+      parameters:
+        - name: prompt
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 用户输入的提示词
+        - name: model
+          in: query
+          schema:
+            type: string
+            default: grok-4-fast:free
+          description: AI模型选择
+      responses:
+        '200':
+          description: 流式响应
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /api/v1/chat/completions:
+    post:
+      tags:
+        - Chat
+      summary: 聊天补全
+      description: 非流式的AI聊天对话
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: 补全成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+
+  # Sessions API
+  /api/v1/sessions:
+    get:
+      tags:
+        - Sessions
+      summary: 获取会话列表
+      description: 获取用户的会话列表
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+
+    post:
+      tags:
+        - Sessions
+      summary: 创建会话
+      description: 创建新的聊天会话
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 会话标题
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+  /api/v1/sessions/{session_id}:
+    get:
+      tags:
+        - Sessions
+      summary: 获取会话详情
+      description: 获取指定会话的详细信息
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+    delete:
+      tags:
+        - Sessions
+      summary: 删除会话
+      description: 删除指定的会话
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      responses:
+        '200':
+          description: 删除成功
+
+  # Models API
+  /api/v1/models:
+    get:
+      tags:
+        - Models
+      summary: 获取可用模型
+      description: 获取可用的AI模型列表
+      parameters:
+        - name: service
+          in: query
+          schema:
+            type: string
+            default: openrouter
+          description: AI服务提供商
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsResponse'
+
+  # Stats API
+  /api/v1/stats:
+    get:
+      tags:
+        - Stats
+      summary: 获取使用统计
+      description: 获取API使用统计数据
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+
+# Components
+components:
+  schemas:
+    # Authentication
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: 用户邮箱
+        password:
+          type: string
+          format: password
+          description: 用户密码
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: 访问令牌
+        token_type:
+          type: string
+          default: bearer
+        expires_in:
+          type: integer
+          description: 过期时间(秒)
+        user:
+          $ref: '#/components/schemas/User'
+
+    # User
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 用户ID
+        email:
+          type: string
+          description: 用户邮箱
+        full_name:
+          type: string
+          description: 用户全名
+        plan:
+          type: string
+          description: 用户套餐
+        is_active:
+          type: boolean
+          description: 是否激活
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    # Error
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 错误信息
+        detail:
+          type: string
+          description: 详细描述
+        status_code:
+          type: integer
+          description: HTTP状态码
+
+    # Multi-Modal AI
+    ImageAnalysisResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        description:
+          type: string
+          description: 分析描述
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        confidence:
+          type: number
+          format: float
+          description: 置信度
+        objects:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 对象名称
+              confidence:
+                type: number
+                format: float
+                description: 置信度
+          description: 识别的对象
+        text_content:
+          type: string
+          description: 识别的文字内容
+        sentiment:
+          type: string
+          description: 情感分析结果
+        moderation_flags:
+          type: array
+          items:
+            type: string
+          description: 内容审核标志
+        metadata:
+          type: object
+          description: 元数据
+        processing_time:
+          type: number
+          format: float
+          description: 处理时间(秒)
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    SpeechTranscriptionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        text:
+          type: string
+          description: 转录的文本
+        confidence:
+          type: number
+          format: float
+          description: 置信度
+        language:
+          type: string
+          description: 语言代码
+        duration:
+          type: number
+          format: float
+          description: 音频时长(秒)
+        segments:
+          type: array
+          items:
+            type: object
+            properties:
+              start:
+                type: number
+                description: 开始时间
+              end:
+                type: number
+                description: 结束时间
+              text:
+                type: string
+                description: 文本片段
+              confidence:
+                type: number
+                description: 置信度
+          description: 转录片段
+        translated_text:
+          type: string
+          description: 翻译文本
+        metadata:
+          type: object
+          description: 元数据
+        processing_time:
+          type: number
+          format: float
+          description: 处理时间(秒)
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    DocumentAnalysisResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        content:
+          type: string
+          description: 文档内容
+        summary:
+          type: string
+          description: 文档摘要
+        key_points:
+          type: array
+          items:
+            type: string
+          description: 关键要点
+        tables:
+          type: array
+          items:
+            type: object
+          description: 提取的表格
+        images:
+          type: array
+          items:
+            type: object
+          description: 提取的图片
+        metadata:
+          type: object
+          description: 元数据
+        processing_time:
+          type: number
+          format: float
+          description: 处理时间(秒)
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    MultiModalProcessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否成功
+        task:
+          type: string
+          description: 处理任务
+        results:
+          type: object
+          description: 处理结果
+        metadata:
+          type: object
+          description: 元数据
+        processing_time:
+          type: number
+          format: float
+          description: 处理时间(秒)
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    HealthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 是否健康
+        status:
+          type: object
+          properties:
+            vision:
+              type: object
+              properties:
+                status:
+                  type: string
+                initialized:
+                  type: boolean
+            audio:
+              type: object
+              properties:
+                status:
+                  type: string
+                initialized:
+                  type: boolean
+            document:
+              type: object
+              properties:
+                status:
+                  type: string
+                initialized:
+                  type: boolean
+            overall:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    CapabilitiesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        capabilities:
+          type: object
+          properties:
+            vision:
+              type: object
+              properties:
+                supported_formats:
+                  type: array
+                  items:
+                    type: string
+                analysis_types:
+                  type: array
+                  items:
+                    type: string
+                max_file_size:
+                  type: string
+                features:
+                  type: array
+                  items:
+                    type: string
+            audio:
+              type: object
+              properties:
+                supported_formats:
+                  type: array
+                  items:
+                    type: string
+                task_types:
+                  type: array
+                  items:
+                    type: string
+                max_file_size:
+                  type: string
+                features:
+                  type: array
+                  items:
+                    type: string
+            document:
+              type: object
+              properties:
+                supported_formats:
+                  type: array
+                  items:
+                    type: string
+                max_file_size:
+                  type: string
+                features:
+                  type: array
+                  items:
+                    type: string
+        version:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+
+    # Workflow
+    WorkflowCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: 工作流名称
+        description:
+          type: string
+          description: 工作流描述
+        category:
+          type: string
+          default: general
+          description: 工作流分类
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowNode'
+          description: 节点列表
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowConnection'
+          description: 连接列表
+        variables:
+          type: object
+          description: 工作流变量
+        triggers:
+          type: array
+          items:
+            type: object
+          description: 触发器
+        settings:
+          type: object
+          description: 工作流设置
+
+    WorkflowUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 工作流名称
+        description:
+          type: string
+          description: 工作流描述
+        category:
+          type: string
+          description: 工作流分类
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowNode'
+          description: 节点列表
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowConnection'
+          description: 连接列表
+        variables:
+          type: object
+          description: 工作流变量
+        is_active:
+          type: boolean
+          description: 是否激活
+
+    WorkflowNode:
+      type: object
+      required:
+        - id
+        - type
+        - name
+      properties:
+        id:
+          type: string
+          description: 节点ID
+        type:
+          type: string
+          enum: [start, end, ai_task, data_processing, condition, loop, parallel, wait, webhook, email, database, file_operation, api_call, transformation]
+          description: 节点类型
+        name:
+          type: string
+          description: 节点名称
+        description:
+          type: string
+          description: 节点描述
+        position:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+          description: 节点位置
+        config:
+          type: object
+          description: 节点配置
+        inputs:
+          type: array
+          items:
+            type: string
+          description: 输入参数
+        outputs:
+          type: array
+          items:
+            type: string
+          description: 输出参数
+
+    WorkflowConnection:
+      type: object
+      required:
+        - id
+        - source_node_id
+        - target_node_id
+      properties:
+        id:
+          type: string
+          description: 连接ID
+        source_node_id:
+          type: string
+          description: 源节点ID
+        target_node_id:
+          type: string
+          description: 目标节点ID
+        source_output:
+          type: string
+          description: 源输出
+        target_input:
+          type: string
+          description: 目标输入
+
+    WorkflowExecuteRequest:
+      type: object
+      properties:
+        inputs:
+          type: object
+          description: 输入参数
+        async_execution:
+          type: boolean
+          default: true
+          description: ��否异步执行
+        timeout:
+          type: integer
+          description: 超时时间(秒)
+
+    WorkflowExecutionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 执行ID
+        workflow_id:
+          type: string
+          description: 工作流ID
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+          description: 执行状态
+        start_time:
+          type: string
+          format: date-time
+          description: 开始时间
+        end_time:
+          type: string
+          format: date-time
+          description: 结束时间
+        inputs:
+          type: object
+          description: 输入参数
+        outputs:
+          type: object
+          description: 输出结果
+        variables:
+          type: object
+          description: 变量值
+        node_executions:
+          type: object
+          description: 节点执行结果
+        logs:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              level:
+                type: string
+              node_id:
+                type: string
+              message:
+                type: string
+          description: 执行日志
+        error_message:
+          type: string
+          description: 错误信息
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+        duration:
+          type: number
+          format: float
+          description: 执行时长(秒)
+
+    WorkflowDetailResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 工作流ID
+        name:
+          type: string
+          description: 工作流名称
+        description:
+          type: string
+          description: 工作流描述
+        version:
+          type: string
+          description: 版本号
+        category:
+          type: string
+          description: 分类
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        is_template:
+          type: boolean
+          description: 是否为模板
+        is_active:
+          type: boolean
+          description: 是否激活
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+        created_by:
+          type: string
+          description: 创建者
+        node_count:
+          type: integer
+          description: 节点数量
+        connection_count:
+          type: integer
+          description: 连接数量
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowNode'
+          description: 节点列表
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowConnection'
+          description: 连接列表
+        variables:
+          type: object
+          description: 变量
+        triggers:
+          type: array
+          items:
+            type: object
+          description: 触发器
+        settings:
+          type: object
+          description: 设置
+
+    WorkflowListResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 工作流ID
+        name:
+          type: string
+          description: 工作流名称
+        description:
+          type: string
+          description: 工作流描述
+        version:
+          type: string
+          description: 版本号
+        category:
+          type: string
+          description: 分类
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        is_template:
+          type: boolean
+          description: 是否为模板
+        is_active:
+          type: boolean
+          description: 是否激活
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+        created_by:
+          type: string
+          description: 创建者
+        node_count:
+          type: integer
+          description: 节点数量
+        connection_count:
+          type: integer
+          description: 连接数量
+
+    WorkflowTemplateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 模板ID
+        name:
+          type: string
+          description: 模板名称
+        description:
+          type: string
+          description: 模板描述
+        category:
+          type: string
+          description: 分类
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签列表
+        node_count:
+          type: integer
+          description: 节点数量
+        connection_count:
+          type: string
+          description: 连接数量
+
+    WorkflowFromTemplateRequest:
+      type: object
+      required:
+        - template_id
+        - name
+      properties:
+        template_id:
+          type: string
+          description: 模板ID
+        name:
+          type: string
+          description: 新工作流名称
+        description:
+          type: string
+          description: 工作流描述
+        variables:
+          type: object
+          description: 工作流变量
+
+    WorkflowValidationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: 是否有效
+        errors:
+          type: array
+          items:
+            type: string
+          description: 错误列表
+        warnings:
+          type: array
+          items:
+            type: string
+          description: 警告列表
+        statistics:
+          type: object
+          properties:
+            total_nodes:
+              type: integer
+            total_connections:
+              type: integer
+            start_nodes:
+              type: integer
+            end_nodes:
+              type: integer
+
+    NodeTypesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        node_types:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              icon:
+                type: string
+
+    # Chat
+    ChatCompletionRequest:
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, assistant, system]
+              content:
+                type: string
+          description: 对话消息列表
+        model:
+          type: string
+          default: grok-4-fast:free
+          description: AI模型
+        max_tokens:
+          type: integer
+          description: 最大token数
+        temperature:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 2
+          description: 温度参数
+
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 响应ID
+        object:
+          type: string
+          description: 对象类型
+        created:
+          type: integer
+          description: 创建时间
+        model:
+          type: string
+          description: 使用的模型
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+              message:
+                type: object
+                properties:
+                  role:
+                    type: string
+                  content:
+                    type: string
+              finish_reason:
+                type: string
+          description: 响应选择
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+            completion_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+
+    # Session
+    Session:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: 会话ID
+        title:
+          type: string
+          description: 会话标题
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+        message_count:
+          type: integer
+          description: 消息数量
+        metadata:
+          type: object
+          description: 元数据
+
+    # Models
+    ModelsResponse:
+      type: object
+      properties:
+        service:
+          type: string
+          description: 服务提供商
+        models:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: 模型ID
+              name:
+                type: string
+                description: 模型名称
+              description:
+                type: string
+                description: 模型描述
+              context_length:
+                type: integer
+                description: 上下文长度
+              pricing:
+                type: object
+                properties:
+                  prompt:
+                  type: string
+                completion:
+                  type: string
+        total_count:
+          type: integer
+          description: 模型总数
+
+    # Stats
+    StatsResponse:
+      type: object
+      properties:
+        total_requests:
+          type: integer
+          description: 总请求数
+        today_requests:
+          type: integer
+          description: 今日请求数
+        cost_this_month:
+          type: number
+          format: float
+          description: 本月成本
+        active_users:
+          type: integer
+          description: 活跃用户数
+        popular_models:
+          type: array
+          items:
+            type: object
+            properties:
+              model:
+                type: string
+              requests:
+                type: integer
+              cost:
+                type: number
+                format: float
+        usage_trend:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+              requests:
+                type: integer
+              cost:
+                type: number
+                format: float
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT认证
+
+  responses:
+    Unauthorized:
+      description: 认证失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: 权限不足
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

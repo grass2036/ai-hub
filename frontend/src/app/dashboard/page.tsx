@@ -2,6 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  PageTransition,
+  FadeIn,
+  SlideIn,
+  StaggeredList,
+  Bounce,
+  ProgressBar
+} from '@/components/ui/Animations';
+import RecommendationPanel from '@/components/recommendations/RecommendationPanel';
 
 // 类型定义
 interface DashboardStats {
@@ -265,10 +274,12 @@ export default function DashboardPage() {
   const quotaColor = quotaPercentage > 80 ? 'red' : quotaPercentage > 60 ? 'yellow' : 'green';
 
   return (
-    <div className="p-6">
-      {/* 页面标题 */}
-      <div className="mb-6 flex justify-between items-center">
-        <div>
+    <PageTransition>
+      <div className="p-6">
+        {/* 页面标题 */}
+        <FadeIn delay={100}>
+          <div className="mb-6 flex justify-between items-center">
+            <div>
           <h1 className="text-3xl font-bold text-gray-900">企业仪表板</h1>
           <p className="text-gray-600 mt-1">监控您的AI服务使用情况和业务指标</p>
         </div>
@@ -298,8 +309,10 @@ export default function DashboardPage() {
       ) : (
         <div className="space-y-6">
           {/* 关键指标卡片 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StaggeredList staggerDelay={100}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <SlideIn direction="up" delay={200}>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">本月请求数</h3>
@@ -372,15 +385,12 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="space-y-3">
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div
-                  className={`h-3 rounded-full transition-all duration-300 ${
-                    quotaPercentage > 80 ? 'bg-red-500' :
-                    quotaPercentage > 60 ? 'bg-yellow-500' : 'bg-green-500'
-                  }`}
-                  style={{ width: `${Math.min(quotaPercentage, 100)}%` }}
-                ></div>
-              </div>
+                <ProgressBar
+                  progress={quotaPercentage}
+                  color={quotaPercentage > 80 ? 'red' : quotaPercentage > 60 ? 'yellow' : 'green'}
+                  showPercentage={false}
+                  className="h-3"
+                />
               <div className="flex justify-between text-sm text-gray-600">
                 <span>已使用: {formatNumber(stats.total_requests)}</span>
                 <span>总计: {formatNumber(stats.monthly_quota)}</span>
@@ -415,12 +425,12 @@ export default function DashboardPage() {
                           {formatNumber(model.requests)} 次
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full"
-                          style={{ width: `${model.percentage}%` }}
-                        ></div>
-                      </div>
+                      <ProgressBar
+                        progress={model.percentage}
+                        color="blue"
+                        showPercentage={false}
+                        className="h-2"
+                      />
                     </div>
                     <div className="ml-4 text-right">
                       <p className="text-sm text-gray-600">
@@ -472,6 +482,77 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* 个性化推荐 */}
+          <FadeIn delay={600}>
+            <RecommendationPanel userId="user-1" />
+          </FadeIn>
+
+          {/* Week 7 新功能展示 */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-gray-900">🎉 Week 7 新功能上线</h3>
+              <Badge className="bg-blue-500 text-white">New</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🎨</div>
+                  <h4 className="font-medium text-gray-900">多模态AI</h4>
+                  <p className="text-sm text-gray-600 mt-1">图像、语音、文档智能处理</p>
+                  <button
+                    onClick={() => router.push('/dashboard/multimodal')}
+                    className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    立即体验 →
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">⚙️</div>
+                  <h4 className="font-medium text-gray-900">智能工作流</h4>
+                  <p className="text-sm text-gray-600 mt-1">可视化工作流设计与执行</p>
+                  <button
+                    onClick={() => router.push('/dashboard/workflow')}
+                    className="mt-3 text-sm text-purple-600 hover:text-purple-800 font-medium"
+                  >
+                    开始设计 →
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-green-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">📚</div>
+                  <h4 className="font-medium text-gray-900">API文档</h4>
+                  <p className="text-sm text-gray-600 mt-1">完整API文档与交互测试</p>
+                  <button
+                    onClick={() => router.push('/dashboard/api-docs')}
+                    className="mt-3 text-sm text-green-600 hover:text-green-800 font-medium"
+                  >
+                    查看文档 →
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-orange-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">📊</div>
+                  <h4 className="font-medium text-gray-900">服务监控</h4>
+                  <p className="text-sm text-gray-600 mt-1">实时性能监控和分析</p>
+                  <button
+                    onClick={() => router.push('/dashboard/monitoring')}
+                    className="mt-3 text-sm text-orange-600 hover:text-orange-800 font-medium"
+                  >
+                    查看监控 →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 快捷操作 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <button
@@ -509,6 +590,8 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-    </div>
+        </div>
+      </FadeIn>
+    </PageTransition>
   );
 }

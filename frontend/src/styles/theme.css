@@ -1,0 +1,264 @@
+/* 主题变量和样式定义 */
+
+:root {
+  /* 默认浅色主题变量 */
+  --bg-primary: 249 250 251; /* gray-50 */
+  --bg-secondary: 255 255 255; /* white */
+  --bg-tertiary: 243 244 246; /* gray-100 */
+
+  --text-primary: 17 24 39; /* gray-900 */
+  --text-secondary: 107 114 128; /* gray-500 */
+  --text-tertiary: 156 163 175; /* gray-400 */
+
+  --border-primary: 229 231 235; /* gray-200 */
+  --border-secondary: 243 244 246; /* gray-100 */
+
+  --accent-primary: 59 130 246; /* blue-500 */
+  --accent-secondary: 147 197 253; /* blue-300 */
+  --accent-tertiary: 239 246 255; /* blue-50 */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+}
+
+/* 深色主题 */
+.dark {
+  --bg-primary: 17 24 39; /* gray-900 */
+  --bg-secondary: 31 41 55; /* gray-800 */
+  --bg-tertiary: 55 65 81; /* gray-700 */
+
+  --text-primary: 243 244 246; /* gray-100 */
+  --text-secondary: 156 163 175; /* gray-400 */
+  --text-tertiary: 107 114 128; /* gray-500 */
+
+  --border-primary: 75 85 99; /* gray-600 */
+  --border-secondary: 55 65 81; /* gray-700 */
+
+  --accent-primary: 59 130 246; /* blue-500 (保持不变) */
+  --accent-secondary: 96 165 250; /* blue-400 */
+  --accent-tertiary: 30 58 138; /* blue-900 */
+}
+
+/* 颜色方案主题 */
+.theme-blue {
+  --accent-primary: 59 130 246; /* blue-500 */
+  --accent-secondary: 147 197 253; /* blue-300 */
+  --accent-tertiary: 239 246 255; /* blue-50 */
+}
+
+.theme-green {
+  --accent-primary: 34 197 94; /* green-500 */
+  --accent-secondary: 134 239 172; /* green-300 */
+  --accent-tertiary: 240 253 244; /* green-50 */
+}
+
+.theme-purple {
+  --accent-primary: 168 85 247; /* purple-500 */
+  --accent-secondary: 196 181 253; /* purple-300 */
+  --accent-tertiary: 250 245 255; /* purple-50 */
+}
+
+.theme-orange {
+  --accent-primary: 249 115 22; /* orange-500 */
+  --accent-secondary: 251 146 60; /* orange-400 */
+  --accent-tertiary: 255 243 232; /* orange-50 */
+}
+
+.theme-red {
+  --accent-primary: 239 68 68; /* red-500 */
+  --accent-secondary: 248 113 113; /* red-400 */
+  --accent-tertiary: 254 242 242; /* red-50 */
+}
+
+/* 字体大小 */
+.font-size-small {
+  --font-size-base: 14px;
+}
+
+.font-size-medium {
+  --font-size-base: 16px;
+}
+
+.font-size-large {
+  --font-size-base: 18px;
+}
+
+/* 紧凑模式 */
+.compact-mode {
+  --spacing-factor: 0.75;
+}
+
+/* 禁用动画 */
+.no-animations * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* 应用主题变量 */
+.bg-primary {
+  background-color: rgb(var(--bg-primary));
+}
+
+.bg-secondary {
+  background-color: rgb(var(--bg-secondary));
+}
+
+.bg-tertiary {
+  background-color: rgb(var(--bg-tertiary));
+}
+
+.text-primary {
+  color: rgb(var(--text-primary));
+}
+
+.text-secondary {
+  color: rgb(var(--text-secondary));
+}
+
+.text-tertiary {
+  color: rgb(var(--text-tertiary));
+}
+
+.border-primary {
+  border-color: rgb(var(--border-primary));
+}
+
+.border-secondary {
+  border-color: rgb(var(--border-secondary));
+}
+
+.bg-accent-primary {
+  background-color: rgb(var(--accent-primary));
+}
+
+.bg-accent-secondary {
+  background-color: rgb(var(--accent-secondary));
+}
+
+.bg-accent-tertiary {
+  background-color: rgb(var(--accent-tertiary));
+}
+
+.text-accent-primary {
+  color: rgb(var(--accent-primary));
+}
+
+.text-accent-secondary {
+  color: rgb(var(--accent-secondary));
+}
+
+.text-accent-tertiary {
+  color: rgb(var(--accent-tertiary));
+}
+
+/* 主题感知的阴影 */
+.shadow-theme-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-theme-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-theme-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* 主题感知的边框半径 */
+.rounded-theme-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-theme-md {
+  border-radius: var(--radius-md);
+}
+
+.rounded-theme-lg {
+  border-radius: var(--radius-lg);
+}
+
+/* 主题感知的过渡 */
+.transition-theme-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-theme-normal {
+  transition: all var(--transition-normal);
+}
+
+.transition-theme-slow {
+  transition: all var(--transition-slow);
+}
+
+/* 主题感知的焦点样式 */
+.focus-ring {
+  outline: 2px solid rgb(var(--accent-primary));
+  outline-offset: 2px;
+}
+
+.focus-ring:focus {
+  outline: 2px solid rgb(var(--accent-primary));
+  outline-offset: 2px;
+}
+
+/* 主题感知的悬停效果 */
+.hover-accent:hover {
+  background-color: rgb(var(--accent-secondary));
+  color: white;
+}
+
+.hover-accent-tertiary:hover {
+  background-color: rgb(var(--accent-tertiary));
+}
+
+/* 主题感知的选择样式 */
+::selection {
+  background-color: rgb(var(--accent-secondary));
+  color: white;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg-tertiary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border-primary));
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--text-tertiary));
+}
+
+/* 深色模式滚动条 */
+.dark ::-webkit-scrollbar-track {
+  background: rgb(var(--bg-secondary));
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(var(--border-secondary));
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--text-secondary));
+}

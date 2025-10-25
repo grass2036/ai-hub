@@ -1,0 +1,461 @@
+# 全球CDN配置
+# Global CDN Configuration
+
+version: "1.0"
+
+# CDN提供商配置
+cdn_providers:
+  primary:
+    name: "Cloudflare"
+    features:
+      - "DDoS Protection"
+      - "Web Application Firewall"
+      - "Bot Management"
+      - "Image Optimization"
+      - "Video Streaming"
+      - "Argo Smart Routing"
+
+  secondary:
+    name: "AWS CloudFront"
+    features:
+      - "Edge Locations"
+      - "Lambda@Edge"
+      - "Field Level Encryption"
+      - "Real-time Logs"
+      - "HTTP/3 Support"
+
+# 全球边缘节点分布
+edge_locations:
+  # 亚太地区
+  asia_pacific:
+    # 主要节点
+    primary:
+      - city: "Singapore"
+        country: "SG"
+        iata: "SIN"
+        provider: "Cloudflare"
+        capacity: "10Gbps"
+        cache_size: "500GB"
+
+      - city: "Tokyo"
+        country: "JP"
+        iata: "NRT"
+        provider: "Cloudflare"
+        capacity: "15Gbps"
+        cache_size: "1TB"
+
+      - city: "Hong Kong"
+        country: "HK"
+        iata: "HKG"
+        provider: "Cloudflare"
+        capacity: "8Gbps"
+        cache_size: "300GB"
+
+    # 次要节点
+    secondary:
+      - city: "Seoul"
+        country: "KR"
+        iata: "ICN"
+        provider: "AWS CloudFront"
+        capacity: "5Gbps"
+        cache_size: "200GB"
+
+      - city: "Mumbai"
+        country: "IN"
+        iata: "BOM"
+        provider: "AWS CloudFront"
+        capacity: "6Gbps"
+        cache_size: "250GB"
+
+      - city: "Sydney"
+        country: "AU"
+        iata: "SYD"
+        provider: "AWS CloudFront"
+        capacity: "4Gbps"
+        cache_size: "150GB"
+
+  # 欧洲地区
+  europe:
+    primary:
+      - city: "Frankfurt"
+        country: "DE"
+        iata: "FRA"
+        provider: "Cloudflare"
+        capacity: "12Gbps"
+        cache_size: "800GB"
+
+      - city: "London"
+        country: "UK"
+        iata: "LHR"
+        provider: "Cloudflare"
+        capacity: "10Gbps"
+        cache_size: "600GB"
+
+      - city: "Paris"
+        country: "FR"
+        iata: "CDG"
+        provider: "Cloudflare"
+        capacity: "8Gbps"
+        cache_size: "400GB"
+
+    secondary:
+      - city: "Amsterdam"
+        country: "NL"
+        iata: "AMS"
+        provider: "AWS CloudFront"
+        capacity: "6Gbps"
+        cache_size: "300GB"
+
+      - city: "Dublin"
+        country: "IE"
+        iata: "DUB"
+        provider: "AWS CloudFront"
+        capacity: "5Gbps"
+        cache_size: "250GB"
+
+      - city: "Milan"
+        country: "IT"
+        iata: "MXP"
+        provider: "AWS CloudFront"
+        capacity: "4Gbps"
+        cache_size: "200GB"
+
+  # 美洲地区
+  americas:
+    primary:
+      - city: "Ashburn"
+        country: "US"
+        iata: "IAD"
+        provider: "Cloudflare"
+        capacity: "20Gbps"
+        cache_size: "1.5TB"
+
+      - city: "San Jose"
+        country: "US"
+        iata: "SJC"
+        provider: "Cloudflare"
+        capacity: "15Gbps"
+        cache_size: "1TB"
+
+      - city: "Toronto"
+        country: "CA"
+        iata: "YYZ"
+        provider: "Cloudflare"
+        capacity: "8Gbps"
+        cache_size: "400GB"
+
+    secondary:
+      - city: "Dallas"
+        country: "US"
+        iata: "DFW"
+        provider: "AWS CloudFront"
+        capacity: "10Gbps"
+        cache_size: "500GB"
+
+      - city: "São Paulo"
+        country: "BR"
+        iata: "GRU"
+        provider: "AWS CloudFront"
+        capacity: "6Gbps"
+        cache_size: "300GB"
+
+      - city: "Mexico City"
+        country: "MX"
+        iata: "MEX"
+        provider: "AWS CloudFront"
+        capacity: "5Gbps"
+        cache_size: "250GB"
+
+# 缓存策略配置
+cache_policies:
+  # 静态资源
+  static_assets:
+    name: "Static Assets"
+    ttl:
+      browser_ttl: 31536000  # 1年
+      edge_ttl: 31536000     # 1年
+      origin_ttl: 86400      # 1天
+    cache_key:
+      include_query_string: false
+      include_headers: ["Accept-Encoding"]
+      include_cookies: false
+    compression:
+      enabled: true
+      algorithms: ["brotli", "gzip"]
+    file_types:
+      - "css"
+      - "js"
+      - "png"
+      - "jpg"
+      - "jpeg"
+      - "gif"
+      - "svg"
+      - "webp"
+      - "woff"
+      - "woff2"
+      - "ttf"
+      - "eot"
+
+  # API响应
+  api_responses:
+    name: "API Responses"
+    ttl:
+      browser_ttl: 0          # 不缓存
+      edge_ttl: 300           # 5分钟
+      origin_ttl: 60          # 1分钟
+    cache_key:
+      include_query_string: true
+      include_headers: ["Authorization", "Accept-Language"]
+      include_cookies: false
+    compression:
+      enabled: true
+      algorithms: ["brotli", "gzip"]
+    file_types:
+      - "json"
+      - "xml"
+      - "txt"
+    cache_rules:
+      - condition: "status_code == 200"
+        ttl: 300
+      - condition: "status_code >= 400"
+        ttl: 60
+
+  # 媒体文件
+  media_files:
+    name: "Media Files"
+    ttl:
+      browser_ttl: 604800     # 7天
+      edge_ttl: 2592000       # 30天
+      origin_ttl: 86400       # 1天
+    cache_key:
+      include_query_string: true
+      include_headers: ["Range"]
+      include_cookies: false
+    compression:
+      enabled: false
+    file_types:
+      - "mp4"
+      - "webm"
+      - "mov"
+      - "avi"
+      - "mp3"
+      - "wav"
+      - "ogg"
+
+  # HTML页面
+  html_pages:
+    name: "HTML Pages"
+    ttl:
+      browser_ttl: 3600       # 1小时
+      edge_ttl: 600           # 10分钟
+      origin_ttl: 300         # 5分钟
+    cache_key:
+      include_query_string: true
+      include_headers: ["Accept-Language", "Cookie"]
+      include_cookies: true
+    compression:
+      enabled: true
+      algorithms: ["brotli", "gzip"]
+    file_types:
+      - "html"
+      - "htm"
+
+# 地理路由配置
+geo_routing:
+  # 基于地理位置的路由规则
+  rules:
+    - name: "Asia Pacific Routing"
+      geo_locations: ["AP", "Oceania"]
+      primary_origin: "ap-southeast-1"
+      backup_origins: ["ap-northeast-1", "ap-south-1"]
+      edge_optimization: true
+
+    - name: "Europe Routing"
+      geo_locations: ["EU"]
+      primary_origin: "eu-central-1"
+      backup_origins: ["eu-west-1", "eu-west-2"]
+      edge_optimization: true
+
+    - name: "Americas Routing"
+      geo_locations: ["NA", "SA"]
+      primary_origin: "us-east-1"
+      backup_origins: ["us-west-2", "ca-central-1"]
+      edge_optimization: true
+
+    - name: "China Routing"
+      geo_locations: ["CN"]
+      primary_origin: "china-north-1"
+      backup_origins: ["china-east-1"]
+      edge_optimization: false
+      special_handling: true
+
+# 安全配置
+security:
+  # DDoS防护
+  ddos_protection:
+    enabled: true
+    threshold: "10Gbps"
+    mitigation_mode: "automatic"
+    alert_threshold: "5Gbps"
+
+  # Web应用防火墙
+  waf:
+    enabled: true
+    rules:
+      - name: "SQL Injection Protection"
+        action: "block"
+        severity: "high"
+
+      - name: "XSS Protection"
+        action: "block"
+        severity: "medium"
+
+      - name: "Rate Limiting"
+        action: "throttle"
+        rate_limit:
+          requests_per_minute: 1000
+          burst: 2000
+
+      - name: "Bot Protection"
+        action: "challenge"
+        bot_score_threshold: 20
+
+  # SSL/TLS配置
+  ssl:
+    enabled: true
+    min_version: "TLSv1.2"
+    preferred_version: "TLSv1.3"
+    ciphers:
+      - "TLS_AES_256_GCM_SHA384"
+      - "TLS_CHACHA20_POLY1305_SHA256"
+      - "TLS_AES_128_GCM_SHA256"
+    hsts:
+      enabled: true
+      max_age: 31536000
+      include_subdomains: true
+      preload: true
+
+# 性能优化
+performance:
+  # Brotli压缩
+  compression:
+    enabled: true
+    algorithms:
+      - name: "brotli"
+        level: 6
+        min_size: 100
+      - name: "gzip"
+        level: 9
+        min_size: 100
+
+  # HTTP/2和HTTP/3
+  http_versions:
+    - "HTTP/3"
+    - "HTTP/2"
+    - "HTTP/1.1"
+
+  # 图片优化
+  image_optimization:
+    enabled: true
+    formats:
+      - "WebP"
+      - "AVIF"
+      - "JPEG"
+    automatic_resizing: true
+    quality: 85
+
+  # 代码优化
+  code_optimization:
+    minification:
+      enabled: true
+      types: ["css", "js", "html"]
+
+    concatenation:
+      enabled: true
+      types: ["css", "js"]
+
+# 监控和分析
+monitoring:
+  # 实时监控
+  real_time_metrics:
+    - "cache_hit_ratio"
+    - "response_time"
+    - "bandwidth_usage"
+    - "error_rate"
+    - "bot_score"
+
+  # 日志配置
+  logging:
+    enabled: true
+    retention_days: 90
+    fields:
+      - "timestamp"
+      - "client_ip"
+      - "method"
+      - "url"
+      - "status_code"
+      - "response_size"
+      - "cache_status"
+      - "user_agent"
+      - "country"
+      - "edge_location"
+
+  # 分析配置
+  analytics:
+    enabled: true
+    real_time_dashboard: true
+    custom_events:
+      - "api_calls"
+      - "user_interactions"
+      - "errors"
+      - "performance"
+
+# 成本优化
+cost_optimization:
+  # 预留容量
+  reserved_capacity:
+    - region: "North America"
+      bandwidth: "100TB"
+      discount: "30%"
+
+    - region: "Europe"
+      bandwidth: "50TB"
+      discount: "25%"
+
+    - region: "Asia Pacific"
+      bandwidth: "75TB"
+      discount: "20%"
+
+  # 智能缓存
+  intelligent_caching:
+    enabled: true
+    prefetching: true
+    predictive_caching: true
+    machine_learning_optimization: true
+
+# 失败转移和灾难恢复
+failover:
+  # 健康检查
+  health_checks:
+    enabled: true
+    interval: 30
+    timeout: 10
+    healthy_threshold: 3
+    unhealthy_threshold: 2
+    path: "/health"
+    expected_codes: [200, 204]
+
+  # 失败转移配置
+  failover_config:
+    automatic_failover: true
+    failover_timeout: 60
+    recovery_time: 300
+    backup_cdn: "AWS CloudFront"
+
+  # 灾难恢复
+  disaster_recovery:
+    enabled: true
+    backup_regions: ["eu-west-1", "ap-southeast-1"]
+    data_replication: true
+    rto: "5 minutes"
+    rpo: "1 minute"

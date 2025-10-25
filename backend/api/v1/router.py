@@ -30,6 +30,8 @@ from .payments import router as payments_router
 from .audit import router as audit_router
 from .permissions import router as permissions_router
 from .monitoring import router as monitoring_router
+from .monitoring_new import router as monitoring_new_router
+from .alerts import router as alerts_router
 from .ai_advanced import router as ai_advanced_router
 from .operations import router as operations_router
 from .tenant import router as tenant_router
@@ -37,6 +39,11 @@ from .analytics import router as analytics_router
 from .performance import router as performance_router
 from .ha import router as ha_router
 from .backup import router as backup_router
+from .multimodal import router as multimodal_router
+from .workflow import router as workflow_router
+from .recommendations import router as recommendations_router
+from .plugin_market import router as plugin_market_router
+from .database_optimization import router as database_optimization_router
 from backend.api.v2 import v2_router
 # from .documents import router as documents_router
 # from .websocket import router as websocket_router
@@ -64,6 +71,8 @@ async def api_root():
             "audit": "/audit",
             "permissions": "/permissions",
             "monitoring": "/monitoring",
+            "monitoring_new": "/monitoring-new",
+            "alerts": "/alerts",
             "ai_advanced": "/ai-advanced",
             "operations": "/operations",
             "tenant": "/tenant",
@@ -71,6 +80,10 @@ async def api_root():
             "performance": "/performance",
             "ha": "/ha",
             "backup": "/backup",
+            "multimodal": "/multimodal",
+            "workflow": "/workflow",
+            "database_optimization": "/database-optimization",
+            "swagger": "/swagger",
             "v2": "/v2",
             "documents": "/documents",
             "websocket": "/ws"
@@ -138,6 +151,8 @@ api_router.include_router(payments_router, tags=["payments"])
 api_router.include_router(audit_router, prefix="/audit", tags=["audit"])
 api_router.include_router(permissions_router, prefix="/permissions", tags=["permissions"])
 api_router.include_router(monitoring_router, prefix="/monitoring", tags=["monitoring"])
+api_router.include_router(monitoring_new_router, prefix="/monitoring-new", tags=["monitoring"])
+api_router.include_router(alerts_router, prefix="/alerts", tags=["alerts"])
 api_router.include_router(ai_advanced_router, prefix="/ai-advanced", tags=["ai_advanced"])
 api_router.include_router(operations_router, prefix="/operations", tags=["operations"])
 api_router.include_router(tenant_router, prefix="/tenant", tags=["tenant"])
@@ -145,6 +160,11 @@ api_router.include_router(analytics_router, prefix="/analytics", tags=["analytic
 api_router.include_router(performance_router, prefix="/performance", tags=["performance"])
 api_router.include_router(ha_router, tags=["high-availability"])
 api_router.include_router(backup_router, tags=["backup-recovery"])
+api_router.include_router(multimodal_router, tags=["multimodal"])
+api_router.include_router(workflow_router, tags=["workflow"])
+api_router.include_router(recommendations_router, prefix="/recommendations", tags=["recommendations"])
+api_router.include_router(plugin_market_router, prefix="/plugin-market", tags=["plugin_market"])
+api_router.include_router(database_optimization_router, tags=["database-optimization"])
 api_router.include_router(v2_router, tags=["api-v2"])
 api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
 api_router.include_router(stats_router, prefix="/stats", tags=["stats"])
