@@ -44,6 +44,9 @@ from .workflow import router as workflow_router
 from .recommendations import router as recommendations_router
 from .plugin_market import router as plugin_market_router
 from .database_optimization import router as database_optimization_router
+from .cache import router as cache_router
+from .performance_optimization import router as performance_optimization_router
+from .billing import router as billing_router
 from backend.api.v2 import v2_router
 # from .documents import router as documents_router
 # from .websocket import router as websocket_router
@@ -78,11 +81,14 @@ async def api_root():
             "tenant": "/tenant",
             "analytics": "/analytics",
             "performance": "/performance",
+            "performance_optimization": "/performance-optimization",
             "ha": "/ha",
             "backup": "/backup",
             "multimodal": "/multimodal",
             "workflow": "/workflow",
             "database_optimization": "/database-optimization",
+            "cache": "/cache",
+            "billing": "/billing",
             "swagger": "/swagger",
             "v2": "/v2",
             "documents": "/documents",
@@ -165,6 +171,9 @@ api_router.include_router(workflow_router, tags=["workflow"])
 api_router.include_router(recommendations_router, prefix="/recommendations", tags=["recommendations"])
 api_router.include_router(plugin_market_router, prefix="/plugin-market", tags=["plugin_market"])
 api_router.include_router(database_optimization_router, tags=["database-optimization"])
+api_router.include_router(cache_router, tags=["cache"])
+api_router.include_router(performance_optimization_router, tags=["performance-optimization"])
+api_router.include_router(billing_router, tags=["billing"])
 api_router.include_router(v2_router, tags=["api-v2"])
 api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
 api_router.include_router(stats_router, prefix="/stats", tags=["stats"])
